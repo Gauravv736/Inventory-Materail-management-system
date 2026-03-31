@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Inventory</title>
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:#f4f6f9;
+margin:0;
+}
+
+.header{
+background:#34495e;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.container{
+width:80%;
+margin:auto;
+margin-top:30px;
+}
+
+.card{
+background:white;
+padding:25px;
+margin-bottom:20px;
+border-radius:10px;
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+input{
+padding:10px;
+margin:5px;
+}
+
+button{
+padding:10px;
+background:#27ae60;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th{
+background:#2c3e50;
+color:white;
+padding:10px;
+}
+
+td{
+padding:10px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+<h2>Warehouse Inventory</h2>
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h3>Search Inventory</h3>
+
+<input id="productName" placeholder="Product Name">
+<input id="bay" placeholder="Bay">
+
+<button onclick="search()">Search</button>
+
+</div>
+
+<div class="card">
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Product</th>
+<th>Bay</th>
+<th>Qty</th>
+</tr>
+</thead>
+
+<tbody id="inventoryTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+function search(){
+
+let product=document.getElementById("productName").value
+let bay=document.getElementById("bay").value
+
+fetch(`/inventory/search?productName=${product}&bay=${bay}`)
+.then(res=>res.json())
+.then(data=>{
+
+let table=document.getElementById("inventoryTable")
+
+table.innerHTML=""
+
+data.forEach(inv=>{
+
+table.innerHTML+=`
+<tr>
+<td>${inv.id}</td>
+<td>${inv.product.productName}</td>
+<td>${inv.locationBayString}</td>
+<td>${inv.qty}</td>
+</tr>
+`
+
+})
+
+})
+
+}
+
+</script>
+
+</body>
+</html>

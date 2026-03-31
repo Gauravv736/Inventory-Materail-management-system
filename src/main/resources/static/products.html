@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Products</title>
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:#eef2f7;
+margin:0;
+}
+
+.navbar{
+background:#2c3e50;
+color:white;
+padding:15px 40px;
+}
+
+.container{
+width:80%;
+margin:auto;
+margin-top:40px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+input{
+padding:10px;
+margin:8px;
+}
+
+button{
+padding:10px 15px;
+background:#3498db;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+table{
+width:100%;
+margin-top:20px;
+border-collapse:collapse;
+}
+
+th{
+background:#2c3e50;
+color:white;
+padding:10px;
+}
+
+td{
+padding:10px;
+text-align:center;
+border-bottom:1px solid #ddd;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+<h2>Products</h2>
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h3>Add Product</h3>
+
+<input id="name" placeholder="Product Name">
+<input id="rate" placeholder="Rate">
+<input id="qty" placeholder="Quantity">
+
+<button onclick="addProduct()">Add Product</button>
+
+</div>
+
+<div class="card">
+
+<h3>Product List</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Rate</th>
+<th>Quantity</th>
+</tr>
+</thead>
+
+<tbody id="productTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+loadProducts()
+
+function loadProducts(){
+
+fetch("/products")
+.then(res=>res.json())
+.then(data=>{
+
+let table=document.getElementById("productTable")
+
+table.innerHTML=""
+
+data.forEach(p=>{
+
+table.innerHTML+=`
+<tr>
+<td>${p.id}</td>
+<td>${p.productName}</td>
+<td>${p.rate}</td>
+<td>${p.totalQty}</td>
+</tr>
+`
+
+})
+
+})
+
+}
+
+function addProduct(){
+
+let product={
+productName:document.getElementById("name").value,
+rate:document.getElementById("rate").value,
+totalQty:document.getElementById("qty").value,
+totalValue:0
+}
+
+fetch("/products",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(product)
+}).then(()=>loadProducts())
+
+}
+
+</script>
+
+</body>
+</html>

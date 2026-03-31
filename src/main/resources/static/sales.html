@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Sales</title>
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:#f4f6f9;
+margin:0;
+}
+
+.header{
+background:#e74c3c;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.container{
+width:80%;
+margin:auto;
+margin-top:30px;
+}
+
+.card{
+background:white;
+padding:25px;
+margin-bottom:20px;
+border-radius:10px;
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+input{
+padding:10px;
+margin:5px;
+}
+
+button{
+padding:10px 15px;
+background:#e74c3c;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#c0392b;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th{
+background:#c0392b;
+color:white;
+padding:10px;
+}
+
+td{
+padding:10px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+.nav{
+margin-bottom:15px;
+}
+
+.nav button{
+background:#34495e;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+<h2>Sales Management</h2>
+</div>
+
+<div class="container">
+
+<div class="nav">
+<button onclick="loadSales()">View All Sales</button>
+<button onclick="goProducts()">Products</button>
+<button onclick="goInventory()">Inventory</button>
+</div>
+
+
+<div class="card">
+
+<h3>Sell Product</h3>
+
+<input id="productId" placeholder="Product ID">
+<input id="qty" placeholder="Quantity">
+<input id="party" placeholder="Party Name">
+
+<button onclick="sell()">Sell</button>
+
+</div>
+
+
+<div class="card">
+
+<h3>Sales History</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Product</th>
+<th>Quantity</th>
+<th>Party</th>
+<th>Total Value</th>
+</tr>
+</thead>
+
+<tbody id="salesTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+loadSales()
+
+
+function loadSales(){
+
+fetch("/sales")
+.then(res=>res.json())
+.then(data=>{
+
+let table=document.getElementById("salesTable")
+
+table.innerHTML=""
+
+data.forEach(s=>{
+
+table.innerHTML+=`
+<tr>
+<td>${s.id}</td>
+<td>${s.product.productName}</td>
+<td>${s.qty}</td>
+<td>${s.partyName}</td>
+<td>${s.totalValue}</td>
+</tr>
+`
+
+})
+
+})
+
+}
+
+
+
+function sell(){
+
+let data={
+productId:document.getElementById("productId").value,
+qty:document.getElementById("qty").value,
+partyName:document.getElementById("party").value
+}
+
+fetch("/sales",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(data)
+})
+.then(()=>{
+alert("Sale Successful")
+loadSales()
+})
+
+}
+
+
+function goProducts(){
+window.location.href="products.html"
+}
+
+function goInventory(){
+window.location.href="inventory.html"
+}
+
+</script>
+
+</body>
+</html>
